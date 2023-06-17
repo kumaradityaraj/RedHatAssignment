@@ -39,6 +39,15 @@ app.post('/add', upload.array('files'), (req,res)=>{
     return res.json({ files });
 })
 
+app.get('/list', (req, res) => {
+  const files = Object.keys(fileStore);
+  return res.json({ files });
+});
 
+function populateFileStore() {
+    fs.readdirSync('files').forEach((filename) => {
+        fileStore[filename] = `files/${filename}`;
+    });
+}
 
-
+populateFileStore();
