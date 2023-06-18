@@ -55,6 +55,16 @@ app.delete('/remove', (req, res) => {
   }
 });
 
+app.put('/update', upload.single('file'), (req, res) => {
+  const { filename } = req.body;
+  const { originalname, path } = req.file;
+  if (fileStore[filename]) {
+    delete fileStore[filename];
+  }
+  fileStore[originalname] = path;
+  return res.json({ message: 'File updated successfully' });
+});
+
 function populateFileStore() {
     fs.readdirSync('files').forEach((filename) => {
         fileStore[filename] = `files/${filename}`;

@@ -47,6 +47,23 @@ function removeFile(filename) {
     });
 }
 
+function updateFile(filename) {
+  const form = new FormData();
+  const fileStream = fs.createReadStream(filename);
+  form.append('file', fileStream);
+  form.append('filename', filename);
+  axios
+    .put(`${SERVER_URL}/update`, form, {
+      headers: form.getHeaders(),
+    })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error('Error:', error.response.data.error);
+    });
+}
+
 function parseArguments(){
     const args = process.argv.slice(2);
     const command = args[0];
@@ -62,6 +79,10 @@ function parseArguments(){
         case 'rm':
             const filename = args[1];
             removeFile(filename);
+            break;
+        case 'update':
+            const updateFilename = args[1];
+            updateFile(updateFilename);
             break;
         default:
             console.error("Invalid command");
