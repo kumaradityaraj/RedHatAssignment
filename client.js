@@ -75,6 +75,18 @@ function wordCount() {
     });
 }
 
+function frequentWords(limit = 10, order = 'asc') {
+  axios
+    .get(`${SERVER_URL}/freq-words?limit=${limit}&order=${order}`)
+    .then((response) => {
+      console.log(`Most frequent words (limit=${limit}, order=${order}):`);
+      console.log(response.data.freq_words);
+    })
+    .catch((error) => {
+      console.error('Error:', error.response.data.error);
+    });
+}
+
 function parseArguments(){
     const args = process.argv.slice(2);
     const command = args[0];
@@ -97,6 +109,11 @@ function parseArguments(){
             break;
         case 'wc':
             wordCount();
+            break;
+        case 'freq-words':
+            const limit = parseInt(args[1]) || 10;
+            const order = args[2] || 'asc';
+            frequentWords(limit, order);
             break;
         default:
             console.error("Invalid command");

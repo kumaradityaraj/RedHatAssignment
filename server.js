@@ -76,6 +76,19 @@ app.get('/wc', (req, res) => {
     return res.json({ word_count: wc_count});
 });
 
+app.get('/freq-words', (req, res) => {
+  const limit = parseInt(req.query.limit) || 10;
+  const order = req.query.order || 'asc';
+  if (order == 'asc') {
+    freqWordsCommand = `cat files/* | tr -s ' ' '\n' | sort | uniq -c | sort -n | tail -n ${limit}`;
+    } else {
+    freqWordsCommand = `cat files/* | tr -s ' ' '\n' | sort | uniq -c | sort -nr | tail -n ${limit}`;
+    }
+  const output = execSync(freqWordsCommand).toString().trim();
+  console.log(output);
+  return res.json({ freq_words: output});
+});
+
 function populateFileStore() {
     fs.readdirSync('files').forEach((filename) => {
         fileStore[filename] = `files/${filename}`;
