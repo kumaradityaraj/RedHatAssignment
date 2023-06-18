@@ -34,6 +34,19 @@ function listFiles() {
     });
 }
 
+function removeFile(filename) {
+  axios
+    .delete(`${SERVER_URL}/remove?filename=${filename}`, {
+      data: { filename },
+    })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error('Error:', error.response.data.error);
+    });
+}
+
 function parseArguments(){
     const args = process.argv.slice(2);
     const command = args[0];
@@ -45,6 +58,10 @@ function parseArguments(){
             break;
         case 'ls':
             listFiles();
+            break;
+        case 'rm':
+            const filename = args[1];
+            removeFile(filename);
             break;
         default:
             console.error("Invalid command");

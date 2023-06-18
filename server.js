@@ -44,6 +44,17 @@ app.get('/list', (req, res) => {
   return res.json({ files });
 });
 
+app.delete('/remove', (req, res) => {
+  const filename = req.query.filename;
+  if (fileStore[filename]) {
+    fs.unlinkSync(fileStore[filename]); 
+    delete fileStore[filename];
+    return res.json({ message: 'File removed successfully' });
+  } else {
+    return res.json({ error: 'File not found' });
+  }
+});
+
 function populateFileStore() {
     fs.readdirSync('files').forEach((filename) => {
         fileStore[filename] = `files/${filename}`;
