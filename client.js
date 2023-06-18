@@ -64,6 +64,17 @@ function updateFile(filename) {
     });
 }
 
+function wordCount() {
+  axios
+    .get(`${SERVER_URL}/wc`)
+    .then((response) => {
+        console.log(response.data);
+    })
+    .catch((error) => {
+      console.error('Error:', error.response.data.error);
+    });
+}
+
 function parseArguments(){
     const args = process.argv.slice(2);
     const command = args[0];
@@ -83,6 +94,9 @@ function parseArguments(){
         case 'update':
             const updateFilename = args[1];
             updateFile(updateFilename);
+            break;
+        case 'wc':
+            wordCount();
             break;
         default:
             console.error("Invalid command");

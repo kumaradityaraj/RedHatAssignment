@@ -65,6 +65,17 @@ app.put('/update', upload.single('file'), (req, res) => {
   return res.json({ message: 'File updated successfully' });
 });
 
+app.get('/wc', (req, res) => {
+    wc_count = {};
+    for (const filename of Object.values(fileStore)) {
+        const wcCommand = `cat ${filename} | wc -w`;
+        const output = execSync(wcCommand).toString().trim();
+        newfilename = filename.split('/')[1];
+        wc_count[newfilename] = parseInt(output);
+    }
+    return res.json({ word_count: wc_count});
+});
+
 function populateFileStore() {
     fs.readdirSync('files').forEach((filename) => {
         fileStore[filename] = `files/${filename}`;
